@@ -1,11 +1,13 @@
 ARG CADDY_VERSION=2.10.0
 ARG GO_VERSION=1.25
-FROM golang:${GO_VERSION}-alpine AS builder
+FROM --platform=$BUILDPLATFORM golang:${GO_VERSION}-alpine AS builder
 ARG CADDY_VERSION
+ARG TARGETOS
+ARG TARGETARCH
 
 RUN apk add --no-cache git
 RUN go install github.com/caddyserver/xcaddy/cmd/xcaddy@latest
-RUN /go/bin/xcaddy build "v${CADDY_VERSION}" \
+RUN GOOS=${TARGETOS} GOARCH=${TARGETARCH} CGO_ENABLED=0 /go/bin/xcaddy build "v${CADDY_VERSION}" \
     --with github.com/lucaslorentz/caddy-docker-proxy/plugin/v2 \
     --with github.com/caddy-dns/bunny \
     --with github.com/caddy-dns/cloudflare \
