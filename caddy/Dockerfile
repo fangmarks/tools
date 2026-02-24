@@ -15,6 +15,7 @@ RUN GOOS=${TARGETOS} GOARCH=${TARGETARCH} CGO_ENABLED=0 /go/bin/xcaddy build "v$
 
 FROM caddy:${CADDY_VERSION}-alpine
 LABEL org.opencontainers.image.source="https://github.com/fangmarks/tools"
+ENV CADDY_DOCKER_APIS_VERSION=1.44
 
 COPY --from=builder /usr/bin/caddy /usr/bin/caddy
 
